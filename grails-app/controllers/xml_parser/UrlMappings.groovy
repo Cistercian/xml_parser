@@ -12,6 +12,7 @@ class UrlMappings {
         //"/"(view:"/index")
         "/" (controller: "Product")
         "/statistics" (controller: "ViewCounter")
+        "/data" (controller: "Data")
         "500"(view:'/error')
         "404"(view:'/notFound')
     }

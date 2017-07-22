@@ -7,24 +7,14 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <span><g:message code="default.list.label" /></span>
         </div>
 
         <div id="navbar" class="collapse navbar-collapse">
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="/"><g:message code="menu.nav.home" /></a></li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><g:message code="menu.nav.home" /> <b class="caret"></b></a>
-                    <ul class="dropdown-menu wam-dropdown-menu">
-                        <li><a href="/"><g:message code="menu.nav.home" /></a></li>
-                        <li class="divider"></li>
-                        <li><a href="/"><g:message code="menu.nav.home" /></a></li>
-                    </ul>
-                </li>
+                <li><a href="/data"><g:message code="menu.nav.control" /></a></li>
                 <li><a href="/statistics"><g:message code="menu.nav.statistics" /></a></li>
-
             </ul>
-
         </div><!-- /.navbar-collapse -->
         <div id="alerts" class="wam-ontop col-sm-6 col-sm-offset-6">
         </div>

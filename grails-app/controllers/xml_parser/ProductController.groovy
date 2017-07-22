@@ -8,11 +8,9 @@ import static org.springframework.http.HttpStatus.*
 @Transactional(readOnly = false)
 class ProductController {
 
-    def productService
-
     def viewCounterService
 
-    static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
+    static allowedMethods = [save: "POST", update: "POST"]
 
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
@@ -78,7 +76,7 @@ class ProductController {
             return
         }
 
-        productService.fixNumberParsing(product)
+        //productService.fixNumberParsing(product)
 
         if (product.hasErrors()) {
             transactionStatus.setRollbackOnly()
@@ -110,6 +108,7 @@ class ProductController {
 
     @Transactional
     def delete(Product product) {
+        println("delete")
 
         if (product == null) {
             transactionStatus.setRollbackOnly()
@@ -136,26 +135,6 @@ class ProductController {
             }
             '*' { render status: NOT_FOUND }
         }
-    }
-
-    /**
-     * Функция ипорта xml-файла
-     * @return view
-     */
-    @Transactional
-    def importXml() {
-        def sourceXml = request.getFile('sourceXml')
-
-        if (sourceXml.empty) {
-            flash.message = 'file cannot be empty'
-            render(view: 'index')
-            return
-        }
-
-        def xmlContent = productService.getXmlContent(sourceXml)
-        flash.message = productService.importProductsXml(xmlContent)
-
-        render(view: 'index')
     }
 
     /**
@@ -186,7 +165,7 @@ class ProductController {
                     price      : it.price,
                     title      : it.title,
                     rating     : it.rating,
-                    description: it.description?.length() > 100 ? (it.description.substring(0, 100) + "...") : it.description,
+                    description: it.description?.length() > 200 ? (it.description.substring(0, 200) + "...") : it.description,
                     category   : it.category.getName(),
                     image      : it.image
             ]

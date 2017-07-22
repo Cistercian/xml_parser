@@ -6,7 +6,7 @@
 
     <g:set var="entityName" value="${message(code: 'product.label', default: 'Product')}"/>
     <title>
-        <g:message code="default.list.label" args="[entityName]"/>
+        ${entityName}
     </title>
 
     <asset:stylesheet src="dataTables.bootstrap.css"/>
@@ -110,21 +110,14 @@
     })
 </script>
 
-<div id="list-product" class="content scaffold-list" role="main">
-    <g:form action="importXml" enctype="multipart/form-data" useToken="true">
-        <span class="button">
-            <input type="file" name="sourceXml"/>
-            <input type="submit" class="upload" value="upload"/>
-        </span>
-    </g:form>
-</div>
-
 <div class="content container-fluid wam-radius wam-min-height-0">
     <div class='row'>
         <div class="container-fluid wam-not-padding-xs">
             <div class="panel panel-default wam-margin-left-1 wam-margin-right-1 wam-margin-top-1">
                 <div class="panel-heading ">
-                    <h4 class="wam-margin-bottom-0 wam-margin-top-0">Данные БД</h4>
+                    <h2 class="wam-margin-bottom-0 wam-margin-top-0">
+                        <g:message code="product.title" />
+                    </h2>
                 </div>
 
                 <div id="bodyTable" class="panel-body">

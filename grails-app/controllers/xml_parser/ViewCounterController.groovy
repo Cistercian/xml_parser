@@ -8,6 +8,10 @@ class ViewCounterController {
         render(view: 'statistics')
     }
 
+    /**
+     * Функция отправляет статистику по просмотрам в формате "временной штамп в мс", "кол-во просмотров"
+     * @return JSON
+     */
     def getCountersData() {
         println("getCountersData()")
 

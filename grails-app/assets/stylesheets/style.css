@@ -124,13 +124,6 @@
 	}
 }
 @media (max-width: 992px) {
-	.wam-body-login {
-		background: url('/resources/img/background.jpg') center no-repeat;
-		background-size: 992px;
-		background-position: top;
-		overflow-y: hidden;
-	}
-
 	.fc th, .fc td {
 		border-width: 2px;
 		border-color: #b7b7b7;
@@ -223,15 +216,15 @@ div.dataTables_filter {
 Общая ширина контента
 */
 .content {
-	font-family: 'Roboto Slab', serif;
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 body {
-	font-family: 'Roboto Slab', serif;
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 /*настройки для широкого экрана*/
-@media (min-width: 992px) {
+@media (min-width: 1100px) {
 	body, html {
 		width: 100%;
 		height: 100%;
@@ -240,32 +233,17 @@ body {
 		background-color: #e6e6e6;
 		overflow-y: scroll;
 	}
-	.wam-body-login {
-		background: url('/resources/img/background2.jpg') center no-repeat;
-		background-size: cover;
-		overflow-y: hidden;
-	}
-	.wam-content-login {
-		width:100%;
-		display: table;
-		height:100%;
-		margin-top: 20%;
-	}
 	.modal-lg {
 		width: 800px;
 	}
 	.content {
-		width : 992px;
+		width : 1100px;
 		background-color : #fff;
 		margin: 0 auto;
 		padding: 0;
 	}
 	/*Стиль прогресс баров
 	*/
-	.progress {
-		height : 30px;
-	}
-
 	.wam-progress-height-2 {
 		height : 20px;
 	}
@@ -467,4 +445,10 @@ body {
 .demo-placeholder {
 	width: 100%;
 	height: 400px;
+}
+#navbar{
+	font-size: 18px;
+}
+.wam-width-star {
+	width: 24px
 }

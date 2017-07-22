@@ -5,10 +5,10 @@ class Category {
     static constraints = {
     }
 
-    Byte grade;
-    String name;
+    Byte grade;                             //числовая оценка 0..2
+    String name;                            //Наименование категории "плохая"/"хорошая"/"отличная"
 
-    static hasMany = [products: Product]
+    static hasMany = [products: Product]    //ссылка на товар
 
     @Override
     public String toString() {
@@ -17,7 +17,6 @@ class Category {
                 ", grade=" + grade +
                 ", name='" + name + '\'' +
                 ", version=" + version +
-                //", products=" + products +
                 '}';
     }
 }
