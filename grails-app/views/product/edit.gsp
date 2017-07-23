@@ -16,6 +16,7 @@
 
     <asset:javascript src="jquery.js"/>
     <asset:javascript src="bootstrap.min.js"/>
+    <asset:javascript src="functions.js"/>
 </head>
 
 <body>
@@ -82,7 +83,7 @@
 
                             <div class="col-xs-12">
                                 <h3><strong><g:message code="product.label.title"/></strong></h3>
-                                <input type="text" name="title" class="form-control wam-text-size-1"
+                                <input id="inputTitle" type="text" name="title" class="form-control wam-text-size-1"
                                        value="<g:fieldValue bean="${this.product}" field="title"/>" />
                             </input>
                             </div>
