@@ -10,7 +10,7 @@
         ${entityName}
     </title>
 
-    <asset:stylesheet src="dataTables.bootstrap.css"/>
+    <asset:stylesheet src="main.css"/>
     <asset:stylesheet src="bootstrap.min.css"/>
     <asset:stylesheet src="style.css?compile=true"/>
 
@@ -42,7 +42,7 @@
 <div class="content container-fluid wam-radius wam-min-height-0">
     <div class='row'>
         <div class="container-fluid wam-not-padding-xs">
-            <div class="panel panel-default wam-margin-left-1 wam-margin-right-1 wam-margin-top-1">
+            <div class="panel panel-default wam-margin-panel">
                 <div class="panel-heading ">
                     <h2 class="wam-margin-bottom-0 wam-margin-top-0">
                         <g:message code="product.new"/>
@@ -50,7 +50,14 @@
                 </div>
 
                 <div class="panel-body">
-                    <form id="update" method="POST" action="/product/update/${this.product.id}">
+                    <g:if test="${this.product.id != null}">
+                        <g:set var="action" value="update/${this.product.id}" />
+                    </g:if>
+                    <g:else>
+                        <g:set var="action" value="save" />
+                    </g:else>
+
+                    <form id="update" method="POST" action="/product/${action}">
 
                         <g:if test="${flash.message}">
                             <div class="message" role="status">${flash.message}</div>
@@ -70,21 +77,19 @@
                             <div class="col-xs-12 col-md-6">
                                 <h4><strong><g:message code="product.image"/></strong></h4>
                                 <input type="text" name="image" class="form-control wam-text-size-1"
-                                       value="${this.product.image}">
+                                       value="${this.product.image}"/>
                             </div>
 
                             <div class="col-xs-12 col-md-6">
                                 <h4><strong><g:message code="product.productId"/></strong></h4>
                                 <input type="number" name="productId" class="form-control wam-text-size-1"
-                                       value="${this.product.productId}">
-                            </input>
+                                       value="${this.product.productId}"/>
                             </div>
 
                             <div class="col-xs-12">
                                 <h3><strong><g:message code="product.label.title"/></strong></h3>
                                 <input type="text" name="title" class="form-control wam-text-size-1"
-                                       value="<g:fieldValue bean="${this.product}" field="title"/>">
-                            </input>
+                                       value="<g:fieldValue bean="${this.product}" field="title"/>"/>
                             </div>
 
                             <div class="col-xs-12">
@@ -92,22 +97,18 @@
                                     <strong><g:message code="product.rating"/></strong>
                                 </h3>
                                 <input type="number" name="rating" class="form-control wam-text-size-1"
-                                       value="<g:fieldValue bean="${this.product}" field="rating"/>">
-                            </input>
+                                       value="${this.product.rating}"/>
                             </div>
 
                             <div class="col-xs-12">
                                 <h3><strong><g:message code="product.price"/></strong></h3>
                                 <input type="number" name="price" class="form-control wam-text-size-1"
-                                       value="<g:fieldValue bean="${this.product}" field="price"/>">
-                            </input>
+                                       value="${this.product.price}"/>
                             </div>
 
                             <div class="col-xs-12">
                                 <h3><strong><g:message code="product.description"/></strong></h3>
-                                <textarea type="text" name="description" class="form-control input-lg erasable" rows="10"
-                                          placeholder='${label}'><g:fieldValue bean="${this.product}" field="description"/>
-                                </textarea>
+                                <textarea type="text" name="description" class="form-control input-lg erasable" rows="10"><g:fieldValue bean="${this.product}" field="description"/></textarea>
                             </div>
                         </div>
                     </form>

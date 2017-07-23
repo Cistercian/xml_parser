@@ -9,6 +9,7 @@
         ${entityName}
     </title>
 
+    <asset:stylesheet src="main.css"/>
     <asset:stylesheet src="bootstrap.min.css"/>
     <asset:stylesheet src="style.css?compile=true"/>
 
@@ -24,7 +25,7 @@
 <div class="content container-fluid wam-radius wam-min-height-0">
     <div class='row'>
         <div class="container-fluid wam-not-padding-xs">
-            <div class="panel panel-default wam-margin-left-1 wam-margin-right-1 wam-margin-top-1">
+            <div class="panel panel-default wam-margin-panel">
                 <div class="panel-heading ">
                     <h2 class="wam-margin-bottom-0 wam-margin-top-0">
                         <g:message code="error.label" />

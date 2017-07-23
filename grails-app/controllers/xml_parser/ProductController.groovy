@@ -2,8 +2,10 @@ package xml_parser
 
 import grails.converters.JSON
 import grails.transaction.Transactional
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
-import java.text.DecimalFormat
+import java.sql.SQLException
 
 import static org.springframework.http.HttpStatus.*
 
@@ -14,6 +16,8 @@ class ProductController {
 
     def productService
 
+    private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
+
     static allowedMethods = [save: "POST", update: "POST"]
 
     def index(Integer max) {
@@ -22,17 +26,20 @@ class ProductController {
     }
 
     def show(Product product) {
-        println("show()")
+        logger.debug("show()")
 
-        //в отдельном потоке считаем количество просмотров
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            void run() {
-                viewCounterService.incrementCounter(product)
-                println("Счетчик увеличен в отдельном потоке")
-            }
-        })
-        thread.start();
+        //игнорируем попытки просмотреть несуществуюущю запись
+        if (product != null) {
+            //в отдельном потоке считаем количество просмотров
+            Thread thread = new Thread(new Runnable() {
+                @Override
+                void run() {
+                    viewCounterService.incrementCounter(product)
+                    logger.debug("${Thread.currentThread().getName()}: Счетчик просмотра увеличен в отдельном потоке")
+                }
+            })
+            thread.start();
+        }
 
         respond product
     }
@@ -49,9 +56,21 @@ class ProductController {
             return
         }
 
+        //grails & locale ... нивелируем ошибку парсинга символа разделителя целой и дробной части
+        productService.fixNumberParsing(product, params)
+
         if (product.hasErrors()) {
             transactionStatus.setRollbackOnly()
             respond product.errors, view: 'create'
+            return
+        }
+
+        if (!(product.title ==~ '^[а-яА-Я0-9 ]+$')) {
+            logger.info("не пройдена валидация! title:${product.title}")
+
+            transactionStatus.setRollbackOnly()
+            product.errors.rejectValue('title', 'title.validation.error')
+            respond product.errors, view: 'edit'
             return
         }
 
@@ -72,7 +91,7 @@ class ProductController {
 
     @Transactional
     def update(Product product) {
-        println("update()")
+        logger.debug("update()")
 
         if (product == null) {
             transactionStatus.setRollbackOnly()
@@ -81,17 +100,7 @@ class ProductController {
         }
 
         //grails & locale ... нивелируем ошибку парсинга символа разделителя целой и дробной части
-        try {
-            product.rating = Float.valueOf(params.rating.replace(',','.'))
-            product.price = new BigDecimal(params.price.replace(',','.'))
-
-            product.clearErrors()
-
-            //переопределяем категорию на основании текущего рейтинга
-            productService.recheckCategory(product)
-        } catch (NumberFormatException e) {
-            println("ошибка парсинга")
-        }
+        productService.fixNumberParsing(product, params)
 
         if (product.hasErrors()) {
             transactionStatus.setRollbackOnly()
@@ -100,7 +109,7 @@ class ProductController {
         }
 
         if (!(product.title ==~ '^[а-яА-Я0-9 ]+$')) {
-            println("не пройдена валидация! title:${product.title}")
+            logger.info("не пройдена валидация! title:${product.title}")
 
             transactionStatus.setRollbackOnly()
             product.errors.rejectValue('title', 'title.validation.error')
@@ -108,9 +117,26 @@ class ProductController {
             return
         }
 
+        //TODO: не работает автоматическая валидация по полю productId (просто молчаливо игнорируется params.productId > Integer.MAX_VALUE). Почему?
+        try{
+            product.productId = Integer.valueOf(params.productId)
+        } catch (NumberFormatException e) {
+            logger.info("Не пройдена валидация! productId:${product.title}. ${e.getMessage()}")
 
+            transactionStatus.setRollbackOnly()
+            product.errors.rejectValue('title', 'productId.validation.error')
+            respond product.errors, view: 'edit'
+            return
+        }
 
-        product.save flush: true
+        try {
+            product.save flush: true
+        } catch (SQLException e){
+            transactionStatus.setRollbackOnly()
+            product.errors.rejectValue('title', e.getMessage())
+            respond product.errors, view: 'edit'
+            return
+        }
 
         request.withFormat {
             form multipartForm {
@@ -123,7 +149,7 @@ class ProductController {
 
     @Transactional
     def delete(Product product) {
-        println("delete")
+        logger.debug("delete")
 
         if (product == null) {
             transactionStatus.setRollbackOnly()
@@ -153,19 +179,19 @@ class ProductController {
      */
     @Deprecated
     def showImage(Product product) {
-        println(product)
+        logger.debug(product)
 
         response.outputStream << product.image
         response.outputStream.flush()
     }
 
     /**
-     * Функция передает данные таблицы Product
-     * TODO: не перйти ли на ручной постраничный показ?
+     * Функция передает данные таблицы Product (Для datatables.js)
      * @return JSON
      */
+    @Deprecated
     def getData() {
-        println("getData()")
+        logger.debug("getData()")
 
         def data = Product.list().collect {
             [

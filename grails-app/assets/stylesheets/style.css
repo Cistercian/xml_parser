@@ -295,9 +295,6 @@ body {
 .wam-dropdown-menu {
 	min-width: 190px;
 }
-.wam-img-xs-3 {
-	width: 8px;
-}
 .form-control {
 	border: 2px solid #a1ad9f;
 }
@@ -311,13 +308,28 @@ body {
 .wam-height-1 {
 	height: 2px
 }
-.demo-placeholder {
+.graph {
 	width: 100%;
 	height: 400px;
+}
+.graph-fulltime {
+	width: 100%;
+	height: 150px;
 }
 #navbar{
 	font-size: 18px;
 }
 .wam-width-star {
 	width: 24px
+}
+.wam-margin-panel {
+	margin: 5px;
+}
+.wam-img-width {
+	max-height: 250px;
+	max-width: 250px;
+}
+.wam-img-width-by-proc {
+	max-height: 100%;
+	max-width: 100%;
 }

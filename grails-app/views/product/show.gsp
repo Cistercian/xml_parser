@@ -10,7 +10,7 @@
         ${entityName}
     </title>
 
-    <asset:stylesheet src="dataTables.bootstrap.css"/>
+    <asset:stylesheet src="main.css"/>
     <asset:stylesheet src="bootstrap.min.css"/>
     <asset:stylesheet src="style.css?compile=true"/>
 
@@ -67,7 +67,7 @@
 <div class="content container-fluid wam-radius wam-min-height-0">
     <div class='row'>
         <div class="container-fluid wam-not-padding-xs">
-            <div class="panel panel-default wam-margin-left-1 wam-margin-right-1 wam-margin-top-1">
+            <div class="panel panel-default wam-margin-panel">
                 <div class="panel-heading ">
                     <h2 class="wam-margin-bottom-0 wam-margin-top-0">
                         <g:message code="product.show"/>
@@ -82,15 +82,14 @@
                     <div class="row">
                         <div class="col-xs-12 col-md-6">
                             %{--<img src="${createLink(controller:'Product', action:'showImage', id:"${this.product.id}")}" width="200" />--}%
-                            <img src='${this.product.image}'/>
+                            <img src="${this.product.image}" class="wam-img-width-by-proc"/>
                         </div>
 
                         <div class="col-xs-12 col-md-6">
                             <div class="col-xs-12">
                                 <h4><strong><g:message code="product.productId"/></strong></h4>
-                                <input type="number" class="form-control wam-text-size-1" readonly="true"
-                                    value="${this.product.productId}">
-                                </input>
+                                <input type="number" class="form-control wam-text-size-1" readonly
+                                    value="${this.product.productId}" />
                             </div>
                             <div class="col-xs-12">
                                 <h5 class="text-muted wam-margin-top-3">
@@ -102,36 +101,32 @@
 
                         <div class="col-xs-12">
                             <h3><strong><g:message code="product.label.title"/></strong></h3>
-                            <input type="text" class="form-control wam-text-size-1" readonly="true"
-                                   value="${this.product.title}">
-                            </input>
+                            <input type="text" class="form-control wam-text-size-1" readonly
+                                   value="${this.product.title}"/>
                         </div>
 
                         <div class="col-xs-12">
                             <h3>
                                 <strong><g:message code="product.rating"/></strong>
-                                <g:each in="${1..this.product.category.grade + 1}">
+                                <g:each in="${0..this.product.getCategoryGrade()}">
                                     <asset:image src="star.ico" data-toggle="tooltip" data-placement="top"
                                         class="wam-width-star" title="${this.product.category.name}"/>
                                 </g:each>
                             </h3>
-                            <input type="number" class="form-control wam-text-size-1" readonly="true"
-                                   value="${this.product.rating}">
-                            </input>
+                            <input type="number" class="form-control wam-text-size-1" readonly
+                                   value="${this.product.rating}" />
                         </div>
 
                         <div class="col-xs-12">
                             <h3><strong><g:message code="product.price"/></strong></h3>
-                            <input type="number" class="form-control wam-text-size-1" readonly="true"
-                                   value="${this.product.price}">
-                            </input>
+                            <input type="number" class="form-control wam-text-size-1" readonly
+                                   value="${this.product.price}" />
                         </div>
 
                         <div class="col-xs-12">
                             <h3><strong><g:message code="product.description"/></strong></h3>
                             <textarea type="text" path="details" class="form-control input-lg erasable" rows="10"
-                                  readonly="true"
-                                  placeholder='${label}'><g:fieldValue bean="${this.product}" field="description"/>
+                                  readonly placeholder='${label}'><g:fieldValue bean="${this.product}" field="description"/>
                             </textarea>
                         </div>
                     </div>
