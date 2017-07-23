@@ -1,5 +1,8 @@
 package xml_parser
 
+/**
+ * Главная сущность программы.
+ */
 class Product {
 
     static constraints = {
@@ -15,15 +18,15 @@ class Product {
         //image sqlType : 'blob'
     }
 
-    Integer productId;
-    String title;
-    String description;
-    Float rating;
-    BigDecimal price;
-    String image;   //byte[] image;
+    Integer productId;                              //ID товара (в сторонней базе)
+    String title;                                   //наименование товара
+    String description;                             //описание
+    Float rating;                                   //рейтинг (оценка). Используется для определения связанной сущности Category
+    BigDecimal price;                               //цена
+    String image;   //byte[] image;                 //ссылка на картинку
 
     static hasOne =  [category: Category]           //ссылка на сущность категории
-    static hasMany = [viewCounters : ViewCounter]   //ссылки на сущности из таблицы счетчиков просмотра
+    static hasMany = [viewCounters : ViewCounter]   //ссылки на сущности из таблицы счетчиков просмотра (группировка по минутам)
 
     /**
      * Функция получения имени категории (для использования в gsp)

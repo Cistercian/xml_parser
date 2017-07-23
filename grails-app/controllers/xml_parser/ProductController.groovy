@@ -9,6 +9,9 @@ import java.sql.SQLException
 
 import static org.springframework.http.HttpStatus.*
 
+/**
+ * Контроллер для манипулирования записями таблицы Product (CRUD)
+ */
 @Transactional(readOnly = false)
 class ProductController {
 
@@ -30,15 +33,14 @@ class ProductController {
 
         //игнорируем попытки просмотреть несуществуюущю запись
         if (product != null) {
-            //в отдельном потоке считаем количество просмотров
-            Thread thread = new Thread(new Runnable() {
+            //исключаем ожидание клиента из-за возможной очереди на запись счетчика
+            new Thread(new Runnable() {
                 @Override
                 void run() {
                     viewCounterService.incrementCounter(product)
-                    logger.debug("${Thread.currentThread().getName()}: Счетчик просмотра увеличен в отдельном потоке")
+                    logger.debug("${Thread.currentThread().getName()}: Счетчик просмотра увеличен.")
                 }
-            })
-            thread.start();
+            }).start()
         }
 
         respond product
@@ -187,6 +189,7 @@ class ProductController {
 
     /**
      * Функция передает данные таблицы Product (Для datatables.js)
+     * функционал убран - datatables - так себе решение при большом количестве записей в БД
      * @return JSON
      */
     @Deprecated

@@ -9,7 +9,7 @@ class UrlMappings {
             }
         }
 
-        //"/"(view:"/index")
+        "/index" (controller: "Product")
         "/" (controller: "Product")
         "/statistics" (controller: "ViewCounter")
         "/data" (controller: "Data")

@@ -1,5 +1,8 @@
 package xml_parser
 
+/**
+ * Сущность БД, представляющая собой категорию - оценочный параметр основной сущности Product
+ */
 class Category {
 
     static constraints = {
@@ -8,7 +11,7 @@ class Category {
     Byte grade;                             //числовая оценка 0..2
     String name;                            //Наименование категории "плохая"/"хорошая"/"отличная"
 
-    static hasMany = [products: Product]    //ссылка на товар
+    static hasMany = [products: Product]    //ссылка на товар (Product)
 
     @Override
     public String toString() {

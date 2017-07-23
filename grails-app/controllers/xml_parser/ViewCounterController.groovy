@@ -4,6 +4,9 @@ import grails.converters.JSON
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
+/**
+ * Контроллер для вывода данных по таблице view_counter (счетчик просмотров)
+ */
 class ViewCounterController {
 
     private static final Logger logger = LoggerFactory.getLogger(ViewCounterController.class);
