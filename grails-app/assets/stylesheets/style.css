@@ -12,7 +12,6 @@
 .wam-text-size-1 {
 	font-size : 20px;
 }
-
 .wam-btn-1 {
 	margin-top: 10px;
 }
@@ -99,19 +98,7 @@
 /*FullCalendar
 */
 /*Общие настройки таблицы*/
-@media (min-width: 992px) {
-	.fc th, .fc td {
-		border-width: 2px;
-		border-color: #b7b7b7;
-		font-family: 'Roboto Slab', serif;
-		font-size: 30px;
-		color: #675f6f;
-	}
-	/*фон суммы*/
-	.fc-event {
-		height: 100px;
-	}
-
+@media (min-width: 1100px) {
 	.wam-font-size-1 {
 		font-size: 14px;
 	}
@@ -123,14 +110,7 @@
 		margin-top: 20%;
 	}
 }
-@media (max-width: 992px) {
-	.fc th, .fc td {
-		border-width: 2px;
-		border-color: #b7b7b7;
-		font-family: 'Roboto Slab', serif;
-		font-size: 16px;
-		/*color: #675f6f;*/
-	}
+@media (max-width: 1100px) {
 	.modal-body {
 		padding: 0px;
 		padding-right: 7px;
@@ -139,7 +119,6 @@
 	}
 	.modal-header {
 		padding: 7px;
-
 	}
 	.wam-font-size {
 		font-size: 14px;
@@ -177,13 +156,6 @@
 	.wam-margin-bottom-2 {
 		margin-bottom: 10px;
 	}
-
-	.fc-event-dot {
-		display: inline-block;
-		width: 20px;
-		height: 20px;
-		border-radius: 0px;
-	}
 	.wam-img-xs-1 {
 		width: 50%;
 	}
@@ -191,11 +163,6 @@
 		width: 100%;
 	}
 }
-/*Принудительно скрываем скролбар в календаре*/
-.fc-scroller {
-	overflow-y: hidden !important;
-}
-
 .form-inline .form-control {
 	display : block;
 }
@@ -242,12 +209,6 @@ body {
 		margin: 0 auto;
 		padding: 0;
 	}
-	/*Стиль прогресс баров
-	*/
-	.wam-progress-height-2 {
-		height : 20px;
-	}
-
 	.wam-margin-left-3 {
 		margin-left: 30px;
 	}
@@ -266,69 +227,6 @@ body {
 	.wam-min-height-4{
 		min-height: 250px;
 	}
-}
-/*Стиль для слайдера фотографий
-*/
-.slider {
-	position: relative;
-	/*padding:50px;*/
-	background:#f8f8f8;
-	/*padding-top:130px;*/
-}
-
-.slider img {
-	width: 100%;
-}
-
-#carousel-slider {
-	position: relative;
-}
-
-#carousel-slider .carousel-indicators {
-	bottom: -35px;
-}
-
-#carousel-slider .carousel-indicators li {
-	border: 1px solid #ffbd20;
-}
-
-#carousel-slider a i {
-	border: 1px solid #d9ae6a;
-	border-radius:50%;
-	font-size: 28px;
-	height: 50px;
-	padding: 8px;
-	position: absolute;
-	top: 43%;
-	width: 50px;
-	color:#fff;
-	background:#d9ae6a;
-}
-
-#carousel-slider a i:hover {
-	background:#deae62;
-	color:#fff;
-	border: 1px solid #d9ae6a;
-}
-
-#carousel-slider
-.carousel-control {
-	width:inherit;
-}
-
-#carousel-slider .carousel-control.left i {
-	left:50px
-}
-
-#carousel-slider .carousel-control.right i {
-	right: 50px;
-}
-
-#carousel-slider
-.carousel-control.left,
-#carousel-slider
-.carousel-control.right {
-	background: none;
 }
 .wam-ontop {
 	z-index: 100;
@@ -363,11 +261,6 @@ body {
 .wam-padding-right-0 {
 	padding-right: 0px;
 }
-
-.wam-login {
-	display: table-cell;
-	vertical-align: middle;
-}
 .wam-modal-dialog{
 	position: relative;
 	display: table; /* This is important */
@@ -383,15 +276,6 @@ body {
 .wam-cursor {
 	cursor: pointer;
 }
-/*
-.wam-body-freeze {
-	overflow: hidden;
-	padding-right: 17px !important;
-}
-*/
-/*Возврат фокуса на модальное окно после закрытия второго, убирание сдвигания страницы при открытии модального окна
-*/
-
 .modal {
 	overflow: auto !important;
 	font-family: 'Roboto Slab', serif;
@@ -414,23 +298,8 @@ body {
 .wam-img-xs-3 {
 	width: 8px;
 }
-#modalHeader .login-panel .panel-heading {
-	background: url('/resources/img/background_1.jpg') 100% 100% no-repeat;
-	background-position: left bottom;
-	background-size: cover;
-}
-.wam-page-title {
-	background: url('/resources/img/background_2.jpg') 100% 100% no-repeat;
-	background-position: left bottom;
-	background-size: cover;
-}
 .form-control {
 	border: 2px solid #a1ad9f;
-}
-.wam-panel-login{
-	border-color: #286090;
-	border: 3px solid #286090;
-	border-radius: 6px;
 }
 .modal-body {
 	max-height: calc(100vh - 210px);

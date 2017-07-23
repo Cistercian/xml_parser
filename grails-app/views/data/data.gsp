@@ -4,7 +4,7 @@
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <g:set var="entityName" value="${message(code: 'product.label', default: 'Product')}"/>
+    <g:set var="entityName" value="${message(code: 'site.label', default: 'Product')}"/>
     <title>
         ${entityName}
     </title>
@@ -76,6 +76,12 @@
                             </div>
                         </div>
                     </g:form>
+
+                    <div class="col-xs-12 col-md-12">
+                        <g:if test="${flash.message}">
+                            <div class="message" role="status">${flash.message}</div>
+                        </g:if>
+                    </div>
                 </div>
             </div>
         </div>

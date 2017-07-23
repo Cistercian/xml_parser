@@ -5,7 +5,7 @@
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <g:set var="entityName" value="${message(code: 'product.label', default: 'Product')}"/>
+    <g:set var="entityName" value="${message(code: 'site.label', default: 'Product')}"/>
     <title>
         ${entityName}
     </title>
@@ -86,16 +86,24 @@
                         </div>
 
                         <div class="col-xs-12 col-md-6">
-                            <h4><strong><g:message code="product.productId"/></strong></h4>
-                            <input type="text" class="form-control wam-text-size-1" readonly="true"
-                                value="<g:fieldValue bean="${this.product}" field="productId"/>">
-                            </input>
+                            <div class="col-xs-12">
+                                <h4><strong><g:message code="product.productId"/></strong></h4>
+                                <input type="number" class="form-control wam-text-size-1" readonly="true"
+                                    value="${this.product.productId}">
+                                </input>
+                            </div>
+                            <div class="col-xs-12">
+                                <h5 class="text-muted wam-margin-top-3">
+                                    <span><g:message code="product.counter"/>:</span>
+                                    <span>${product.getTotalCount()}</span>
+                                </h5>
+                            </div>
                         </div>
 
                         <div class="col-xs-12">
                             <h3><strong><g:message code="product.label.title"/></strong></h3>
                             <input type="text" class="form-control wam-text-size-1" readonly="true"
-                                   value="<g:fieldValue bean="${this.product}" field="title"/>">
+                                   value="${this.product.title}">
                             </input>
                         </div>
 
@@ -107,15 +115,15 @@
                                         class="wam-width-star" title="${this.product.category.name}"/>
                                 </g:each>
                             </h3>
-                            <input type="text" class="form-control wam-text-size-1" readonly="true"
-                                   value="<g:fieldValue bean="${this.product}" field="rating"/>">
+                            <input type="number" class="form-control wam-text-size-1" readonly="true"
+                                   value="${this.product.rating}">
                             </input>
                         </div>
 
                         <div class="col-xs-12">
                             <h3><strong><g:message code="product.price"/></strong></h3>
                             <input type="number" class="form-control wam-text-size-1" readonly="true"
-                                   value="<g:fieldValue bean="${this.product}" field="price"/>">
+                                   value="${this.product.price}">
                             </input>
                         </div>
 

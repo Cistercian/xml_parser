@@ -5,7 +5,7 @@
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <g:set var="entityName" value="${message(code: 'product.label', default: 'Product')}"/>
+    <g:set var="entityName" value="${message(code: 'site.label', default: 'Product')}"/>
     <title>
         ${entityName}
     </title>
@@ -45,32 +45,44 @@
             <div class="panel panel-default wam-margin-left-1 wam-margin-right-1 wam-margin-top-1">
                 <div class="panel-heading ">
                     <h2 class="wam-margin-bottom-0 wam-margin-top-0">
-                        <g:message code="product.show"/>
+                        <g:message code="product.edit"/>
                     </h2>
                 </div>
 
                 <div class="panel-body">
                     <form id="update" method="POST" action="/product/update/${this.product.id}">
+
                         <g:if test="${flash.message}">
                             <div class="message" role="status">${flash.message}</div>
                         </g:if>
                         <div class="row">
+
+                            <div class="col-xs-12 col-md-12">
+                                <g:hasErrors bean="${this.product}">
+                                    <ul class="errors has-error" role="alert">
+                                        <g:eachError bean="${this.product}" var="error">
+                                            <li <g:if test="${error in org.springframework.validation.FieldError}">data-field-id="${error.field}"</g:if>><g:message error="${error}"/></li>
+                                        </g:eachError>
+                                    </ul>
+                                </g:hasErrors>
+                            </div>
+
                             <div class="col-xs-12 col-md-6">
                                 <h4><strong><g:message code="product.image"/></strong></h4>
-                                <input type="text" class="form-control wam-text-size-1"
+                                <input type="text" name="image" class="form-control wam-text-size-1"
                                        value="${this.product.image}">
                             </div>
 
                             <div class="col-xs-12 col-md-6">
                                 <h4><strong><g:message code="product.productId"/></strong></h4>
-                                <input type="text" class="form-control wam-text-size-1"
-                                       value="<g:fieldValue bean="${this.product}" field="productId"/>">
+                                <input type="number" name="productId" class="form-control wam-text-size-1"
+                                       value="${this.product.productId}">
                             </input>
                             </div>
 
                             <div class="col-xs-12">
                                 <h3><strong><g:message code="product.label.title"/></strong></h3>
-                                <input type="text" class="form-control wam-text-size-1"
+                                <input type="text" name="title" class="form-control wam-text-size-1"
                                        value="<g:fieldValue bean="${this.product}" field="title"/>">
                             </input>
                             </div>
@@ -78,26 +90,28 @@
                             <div class="col-xs-12">
                                 <h3>
                                     <strong><g:message code="product.rating"/></strong>
-                                    <g:each in="${1..this.product.category.grade + 1}">
-                                        <asset:image src="star.ico" data-toggle="tooltip" data-placement="top"
-                                                     class="wam-width-star" title="${this.product.category.name}"/>
-                                    </g:each>
+                                    <g:if test="${this.product.category != null}">
+                                        <g:each in="${1..this.product.category.grade + 1}">
+                                            <asset:image src="star.ico" data-toggle="tooltip" data-placement="top"
+                                                         class="wam-width-star" title="${this.product.category.name}"/>
+                                        </g:each>
+                                    </g:if>
                                 </h3>
-                                <input type="text" class="form-control wam-text-size-1"
+                                <input type="number decimal" name="rating" class="form-control wam-text-size-1"
                                        value="<g:fieldValue bean="${this.product}" field="rating"/>">
                             </input>
                             </div>
 
                             <div class="col-xs-12">
                                 <h3><strong><g:message code="product.price"/></strong></h3>
-                                <input type="number" class="form-control wam-text-size-1"
+                                <input type="number" name="price" class="form-control wam-text-size-1"
                                        value="<g:fieldValue bean="${this.product}" field="price"/>">
                             </input>
                             </div>
 
                             <div class="col-xs-12">
                                 <h3><strong><g:message code="product.description"/></strong></h3>
-                                <textarea type="text" path="details" class="form-control input-lg erasable" rows="10"
+                                <textarea type="text" name="description" class="form-control input-lg erasable" rows="10"
                                           placeholder='${label}'><g:fieldValue bean="${this.product}" field="description"/>
                                 </textarea>
                             </div>

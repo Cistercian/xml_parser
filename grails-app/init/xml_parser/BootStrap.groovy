@@ -7,6 +7,7 @@ class BootStrap {
         println("Init app")
         categoryService.initMockData();
 
+        //Locale.setDefault(new Locale("ru"));
         //assert "а А" ==~ '^[а-яА-Я0-9 ]+$'
 
     }

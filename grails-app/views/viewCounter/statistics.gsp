@@ -4,7 +4,7 @@
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <g:set var="entityName" value="${message(code: 'product.label', default: 'Product')}"/>
+    <g:set var="entityName" value="${message(code: 'site.label', default: 'Product')}"/>
     <title>
         <g:message code="default.list.label" args="[entityName]"/>
     </title>
@@ -68,7 +68,7 @@
             // extends to infinity upwards and downwards
 
             do {
-                markings.push({ xaxis: { from: i, to: i + 2 * 24 * 60 * 60 * 1000 } });
+                markings.push({xaxis: {from: i, to: i + 2 * 24 * 60 * 60 * 1000}});
                 i += 7 * 24 * 60 * 60 * 1000;
             } while (i < axes.xaxis.max);
 
@@ -115,7 +115,7 @@
         // now connect the two
         $("#placeholder").bind("plotselected", function (event, ranges) {
             // do the zooming
-            $.each(plot.getXAxes(), function(_, axis) {
+            $.each(plot.getXAxes(), function (_, axis) {
                 var opts = axis.options;
                 opts.min = ranges.xaxis.from;
                 opts.max = ranges.xaxis.to;
@@ -133,31 +133,33 @@
     }
 </script>
 
-<div id="list-product" class="content scaffold-list" role="main">
-    <g:form action="importXml" enctype="multipart/form-data" useToken="true">
-        <span class="button">
-            <input type="file" name="sourceXml"/>
-            <input type="submit" class="upload" value="upload"/>
-        </span>
-    </g:form>
-</div>
-
 <div class="content container-fluid wam-radius wam-min-height-0">
     <div class='row'>
         <div class="container-fluid wam-not-padding-xs">
             <div class="panel panel-default wam-margin-left-1 wam-margin-right-1 wam-margin-top-1">
                 <div class="panel-heading ">
-                    <h4 class="wam-margin-bottom-0 wam-margin-top-0">График счетчиков просмотра</h4>
+                    <h4 class="wam-margin-bottom-0 wam-margin-top-0"><g:message code="statistics.label"/></h4>
                 </div>
 
-                <div class="demo-container">
-                    <div id="placeholder" class="demo-placeholder"></div>
-                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="demo-container">
+                                <div id="placeholder" class="demo-placeholder"></div>
+                            </div>
+                        </div>
 
-                <div class="demo-container" style="height:150px;">
-                    <div id="overview" class="demo-placeholder"></div>
-                </div>
+                        <div class="col-xs-12">
+                            <h4><strong><g:message code="statistics.fulltime"/></strong></h4>
+                        </div>
 
+                        <div class="col-xs-12">
+                            <div class="demo-container">
+                                <div id="overview" class="demo-placeholder"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

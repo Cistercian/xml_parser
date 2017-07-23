@@ -22,11 +22,21 @@ class Product {
     BigDecimal price;
     String image;   //byte[] image;
 
-    static hasOne = [category: Category]
+    static hasOne =  [category: Category]
     static hasMany = [viewCounters : ViewCounter]
 
-    public getCategoryName(){
+    public def getCategoryName(){
         return category.name
+    }
+
+    public def getTotalCount(){
+        def totalCount = 0
+
+        viewCounters.collect(){ curCounter ->
+            totalCount += curCounter.count
+        }
+
+        return totalCount
     }
 
     @Override

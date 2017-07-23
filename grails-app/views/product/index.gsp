@@ -4,7 +4,7 @@
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <g:set var="entityName" value="${message(code: 'product.label', default: 'Product')}"/>
+    <g:set var="entityName" value="${message(code: 'site.label', default: 'Product')}"/>
     <title>
         ${entityName}
     </title>
@@ -15,6 +15,7 @@
     <asset:stylesheet src="style.css?compile=true"/>
 
     <asset:javascript src="jquery.js"/>
+    <asset:javascript src="bootstrap.min.js"/>
     <asset:javascript src="jquery.dataTables.min.js"/>
 
 </head>
@@ -121,6 +122,12 @@
                 </div>
 
                 <div id="bodyTable" class="panel-body">
+                    <div class="col-xs-12 col-md-6 wam-not-padding-xs">
+                        <button type="submit" class="btn-primary btn-lg btn-block wam-btn-1"
+                                onclick="location.href = '/product/create'">
+                            <g:message code="button.new.label"/>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

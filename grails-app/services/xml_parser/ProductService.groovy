@@ -3,6 +3,8 @@ package xml_parser
 import grails.gorm.transactions.Transactional
 import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest
 
+import java.lang.reflect.InvocationTargetException
+
 @Transactional
 class ProductService {
 
@@ -29,41 +31,48 @@ class ProductService {
     def importProductsXml(def xmlContent){
         println("importProductsXml()")
 
-        def productId;
+        def productId
+        def countSuccessful = 0, countError = 0
         println("парсинг XML")
         xmlContent.products.product.each { product ->
-            println("import entity: ${product.title[0].text()}")
+            try{
+                println("import entity: ${product.title[0].text()}")
 
-            productId = product.product_id[0].text() ?: productId
+                productId = product.product_id[0].text() ?: productId
 
-            def price = product.inet_price[0].text() != null ?
-                    new BigDecimal(product.price[0].text()) :
-                    new BigDecimal("0")
+                def price = product.inet_price[0].text() != null && product.inet_price[0].text().length() > 0 ?
+                        new BigDecimal(product.price[0].text()) :
+                        new BigDecimal("0")
 
-            def rating = Float.valueOf(product.rating[0].text()) ?: Float.valueOf(0)
+                def rating = Float.valueOf(product.rating[0].text()) ?: Float.valueOf(0)
 
-            def entity = new Product(
-                    productId: productId,
-                    title: product.title[0].text(),
-                    description: product.description[0].text(),
-                    rating: rating,
-                    price: price,
-                    image: product.image[0].text() //image: new java.net.URL(product.image[0].text()).bytes
-            )
+                def entity = new Product(
+                        productId: productId,
+                        title: product.title[0].text(),
+                        description: product.description[0].text(),
+                        rating: rating,
+                        price: price,
+                        image: product.image[0].text() //image: new java.net.URL(product.image[0].text()).bytes
+                )
 
-            //расчитываем категорию товара
-            def category = categoryService.getByRating(rating);
-            println("Category: ${category}")
+                //расчитываем категорию товара
+                def category = categoryService.getByRating(rating);
+                println("Category: ${category}")
 
-            entity.category = category
-            println("Parsed object: ${entity}, category: ${entity.category}")
-            entity.save(flush: true, failOnError: true);
+                entity.category = category
+                println("Parsed object: ${entity}, category: ${entity.category}")
+                entity.save(flush: true, failOnError: true);
 
-            category.products << entity
-            category.save(flush: true)
+                category.products << entity
+                category.save(flush: true)
+
+                countSuccessful ++
+            } catch (NumberFormatException e) {
+                countError ++
+            }
         }
 
-        return "import complited"
+        return "Импорт завершен! Импортировано ${countSuccessful} объектов. Ошибок при импорте: ${countError}"
     }
 
     @Deprecated
@@ -80,4 +89,7 @@ class ProductService {
         return product
     }
 
+    void recheckCategory(Product product){
+        product.category = categoryService.getByRating(product.rating)
+    }
 }

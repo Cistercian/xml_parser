@@ -3,12 +3,16 @@ package xml_parser
 import grails.converters.JSON
 import grails.transaction.Transactional
 
+import java.text.DecimalFormat
+
 import static org.springframework.http.HttpStatus.*
 
 @Transactional(readOnly = false)
 class ProductController {
 
     def viewCounterService
+
+    def productService
 
     static allowedMethods = [save: "POST", update: "POST"]
 
@@ -76,7 +80,18 @@ class ProductController {
             return
         }
 
-        //productService.fixNumberParsing(product)
+        //grails & locale ... нивелируем ошибку парсинга символа разделителя целой и дробной части
+        try {
+            product.rating = Float.valueOf(params.rating.replace(',','.'))
+            product.price = new BigDecimal(params.price.replace(',','.'))
+
+            product.clearErrors()
+
+            //переопределяем категорию на основании текущего рейтинга
+            productService.recheckCategory(product)
+        } catch (NumberFormatException e) {
+            println("ошибка парсинга")
+        }
 
         if (product.hasErrors()) {
             transactionStatus.setRollbackOnly()
@@ -85,7 +100,7 @@ class ProductController {
         }
 
         if (!(product.title ==~ '^[а-яА-Я0-9 ]+$')) {
-            println("не пройдена валидация!")
+            println("не пройдена валидация! title:${product.title}")
 
             transactionStatus.setRollbackOnly()
             product.errors.rejectValue('title', 'title.validation.error')
@@ -99,7 +114,7 @@ class ProductController {
 
         request.withFormat {
             form multipartForm {
-                flash.message = message(code: 'default.updated.message', args: [message(code: 'product.label', default: 'Product'), product.id])
+                //flash.message = message(code: 'default.updated.message', args: [message(code: 'product.label', default: 'Product'), product.id])
                 redirect product
             }
             '*' { respond product, [status: OK] }
@@ -118,13 +133,7 @@ class ProductController {
 
         product.delete flush: true
 
-        request.withFormat {
-            form multipartForm {
-                flash.message = message(code: 'default.deleted.message', args: [message(code: 'product.label', default: 'Product'), product.id])
-                redirect action: "index", method: "GET"
-            }
-            '*' { render status: NO_CONTENT }
-        }
+        redirect(action: "index")
     }
 
     protected void notFound() {
