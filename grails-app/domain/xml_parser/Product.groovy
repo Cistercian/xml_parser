@@ -33,9 +33,10 @@ class Product {
      * @return String
      */
     public def getCategoryName(){
+        //обрабатывается ли несохраненная в бд сущность
         if (this.id == null)
             return ""
-        //LazyInitializationException
+        //избегаем LazyInitializationException
         if (!this.isAttached()) {
             this.attach()
         }
@@ -47,13 +48,14 @@ class Product {
      * @return Integer
      */
     public def getCategoryGrade() {
+        ////обрабатывается ли несохраненная в бд сущность
         if (this.id == null)
             return 0
-        //LazyInitializationException
+        //избегаем LazyInitializationException
         if (!this.isAttached()) {
             this.attach()
         }
-        return category != null && category.grade != null ? category.grade : 0
+        return category?.grade ?: 0
     }
 
     /**
@@ -77,7 +79,7 @@ class Product {
     public def getFormattedDescription(){
         return description != null && description.length() > 200 ?
                 (description.substring(0,200) + "...") :
-                description
+                description ?: ""
     }
 
     @Override

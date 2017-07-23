@@ -29,7 +29,6 @@
                 <div class="panel-heading ">
                     <h2 class="wam-margin-bottom-0 wam-margin-top-0">
                         <g:message code="product.title"/>
-                        %{--<f:table collection="${productList}" />--}%
                     </h2>
                 </div>
 
@@ -60,7 +59,6 @@
                                 </thead>
                                 <tbody>
                                 <g:each in="${productList}" var="bean" status="i">
-
                                     <tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
                                         <td>
                                             ${bean.productId}
@@ -86,7 +84,6 @@
                                             <g:link method="GET" resource="${bean}" >
                                                 <img src="${bean.image}" class="wam-img-width">
                                             </g:link>
-
                                         </td>
                                     </tr>
                                 </g:each>

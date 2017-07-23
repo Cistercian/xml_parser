@@ -22,23 +22,6 @@
 <body>
 
 <g:render template="/layouts/nav-panel" model=""/>
-<script language="javascript" type="text/javascript">
-    function ClearModalPanel() {
-        $('#modalTitle').text("");
-        $('[id^="modalBody"]').each(function () {
-            $(this).empty();
-        });
-        $('[id^="modalFooter"]').each(function () {
-            $(this).empty();
-        });
-        //гарантированно чистим остатки всплывающего окна
-        $('.modal-backdrop').each(function () {
-            $(this).remove();
-        });
-        //гарантированно-гарантированно чистим остатки всплывающего окна
-        $('body').removeClass('modal-open');
-    }
-</script>
 
 <div class="content container-fluid wam-radius wam-min-height-0">
     <div class='row'>

@@ -26,6 +26,7 @@
 
 <script language="javascript" type="text/javascript">
     $(document).ready(function () {
+        //запрашиваем данные и отображаем график
         $.ajax({
             url: '/viewCounter/getCountersData',
             type: "GET",
@@ -37,6 +38,11 @@
 
         })
     })
+
+    /**
+     * Функция отображения графика.
+     * @param d данные в JSON формате в виде [timestamp, value]
+     */
     function drawChart(d) {
         var options = {
             xaxis: {

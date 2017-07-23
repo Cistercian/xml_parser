@@ -4,15 +4,20 @@ import grails.gorm.transactions.Transactional
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
+/**
+ * Сервисный уровень для сущностей Category.
+ * Предзаполнение БД статичными записями (не предполагается ручное изменение таблицы) и поиск этих данных
+ */
 @Transactional
 class CategoryService {
 
-    //Статичечкая переменная для исключения многократного обращения к БД
+    //Статический список для исключения многократного обращения к БД
     static def categories
 
     private static final Logger logger = LoggerFactory.getLogger(CategoryService.class);
+
     /**
-     * Функция предварительного создания записей Category (заполнение categories)
+     * Функция создания записей Category (заполнение categories). Запускается при запуске приложения.
      */
     void initMockData() {
         log.debug("initMockData()")
@@ -26,10 +31,10 @@ class CategoryService {
 
         for (category in mockData) {
             if (!currentCategories.contains(category)) {
-                log.info("category ${category} not found! Creating...")
+                log.info("category ${category} не найдена! Создаем...")
                 category.save(flush: true)
             } else
-                log.info("category ${category} was found")
+                log.info("category ${category} найдена.")
         }
 
         categories = Category.listOrderByGrade();
@@ -46,7 +51,6 @@ class CategoryService {
         if (Float.compare(rating, 3f) <= 0) {
             log.debug("${rating} - относим к категории Плохая")
             return categories.get(0)
-            //return Category.findByGrade((byte)0)
         } else if (Float.compare(rating, 3f) > 0 && Float.compare(rating, 4f) <= 0) {
             log.debug("${rating} - относим к категории Хорошая")
             return categories.get(1)

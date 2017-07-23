@@ -78,10 +78,8 @@
                     <g:if test="${flash.message}">
                         <div class="message" role="status">${flash.message}</div>
                     </g:if>
-                %{--<f:display bean="product" />--}%
                     <div class="row">
                         <div class="col-xs-12 col-md-6">
-                            %{--<img src="${createLink(controller:'Product', action:'showImage', id:"${this.product.id}")}" width="200" />--}%
                             <img src="${this.product.image}" class="wam-img-width-by-proc"/>
                         </div>
 
