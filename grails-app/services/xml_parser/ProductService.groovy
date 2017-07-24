@@ -4,7 +4,7 @@ import grails.gorm.transactions.Transactional
 import grails.validation.ValidationException
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest
+import org.xml.sax.SAXParseException
 
 /**
  * Сервисный уровень главной таблицы
@@ -21,7 +21,7 @@ class ProductService {
      * @param file Переданный файл из запроса
      * @return отформатированный результат
      */
-    def getXmlContent(InputStream inputStreamXML) {
+    private def getXmlContent(InputStream inputStreamXML) {
         logger.debug("getXmlContent()")
 
         def xmlContent = inputStreamXML?.getText()
@@ -39,8 +39,8 @@ class ProductService {
      * @return
      */
     @Transactional
-    def importProductsXml(def xmlContent) {
-        logger.debug("importProductsXml()")
+    private def importXmlToDB(def xmlContent) {
+        logger.debug("importXmlToDB()")
 
         def productId
         def countSuccessful = 0, countError = 0
@@ -120,5 +120,49 @@ class ProductService {
         logger.debug("recheckCategory()")
 
         product.category = categoryService.getByRating(product.rating)
+    }
+
+    def parsingInputStream(InputStream inputStream, BufferedWriter logWriter){
+        String message
+
+        try {
+            def startTime = System.currentTimeMillis()
+
+            manualLogging(logWriter,"==============");
+            manualLogging(logWriter, "${new Date(startTime)}: Запуск автоматической процедуры импорта данных.")
+
+            def xmlContent = getXmlContent(inputStream)
+            message = importXmlToDB(xmlContent)
+
+            def time = System.currentTimeMillis() - startTime
+
+            logger.info("Время обработки файла: ${time} ms")
+            message = "${message}. Время обработки файла: ${time} ms."
+
+            manualLogging(logWriter, "${new Date(System.currentTimeMillis())}: Завершение автоматической процедуры импорта данных.")
+
+        } catch (SAXParseException e) {
+            String text = "Ошибка парсинга файла: нарушена структура xml-файла. ${e.getMessage()}"
+
+            logger.error(text)
+            manualLogging(logWriter, text)
+
+            message = message(code: 'data.import.exceptionparsing')
+        } catch (IOException e) {
+            String text = "Ошибка открытия импортируемого файла. ${e.getMessage()}."
+
+            logger.error(text)
+            manualLogging(logWriter, text)
+
+            message = message(code: 'data.import.ioexception')
+        } finally {
+            inputStream?.close();
+        }
+
+        return message
+    }
+
+    private void manualLogging(BufferedWriter logWriter, String message){
+        if (logWriter != null) logWriter.writeLine(message)
     }
 }

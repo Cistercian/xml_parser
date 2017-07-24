@@ -34,27 +34,8 @@ class DataController {
             return
         }
 
-        try {
-            def startTime = System.currentTimeMillis()
+        flash.message = productService.parsingInputStream(sourceXml.getInputStream(), null)
 
-            def xmlContent = productService.getXmlContent(sourceXml.getInputStream())
-            flash.message = productService.importProductsXml(xmlContent)
-
-            def time = System.currentTimeMillis() - startTime
-            logger.info("Время обработки файла: ${time} ms")
-
-            flash.message = "${flash.message}. Время обработки файла: ${time} ms."
-
-        } catch (SAXParseException e) {
-            logger.error("Ошибка парсинга файла: нарушена структура xml-файла. ${e.getMessage()}")
-            flash.message = message(code: 'data.import.exceptionparsing')
-        } finally {
-            if (flash.message != null) {
-                render(view: 'data')
-                return
-            }
-        }
-
-        respond flash.message, view: 'data'
+        render(view: 'data')
     }
 }

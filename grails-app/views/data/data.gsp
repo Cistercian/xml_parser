@@ -82,6 +82,16 @@
                             <div class="message" role="status">${flash.message}</div>
                         </g:if>
                     </div>
+                    <div class="col-xs-12">
+                        <h4><strong>
+                            <g:message code="data.import.scheduler.log.label"/>
+                        </strong></h4>
+                    </div>
+                    <div class="col-xs-12">
+                        <g:each in="${Util.getSchedulerLog()}" var="line">
+                            <p><span class="text-muted">${line}</span></p>
+                        </g:each>
+                    </div>
                 </div>
             </div>
         </div>
