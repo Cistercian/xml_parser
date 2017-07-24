@@ -4,8 +4,7 @@ import xml_parser.BackgroundTaskImpl
 beans = {
     backgroundTaskImpl(BackgroundTaskImpl){
         productService = ref('productService')
-    }
-
+    } 
 
     xmlns backgroundTask: "http://www.springframework.org/schema/task"
 

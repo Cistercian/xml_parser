@@ -10,8 +10,9 @@ import java.nio.file.Paths
 class Util {
 
     /**
-     * Функция чтения лог файла (для отображения в gsp)
+     * Функция вывода содержимого лог файла фонового импорта (для отображения в gsp)
      * Путь до файла задан статически
+     *
      * @return List<String>
      */
     public static def getSchedulerLog(){

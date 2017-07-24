@@ -6,13 +6,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.xml.sax.SAXParseException
 
-import java.util.concurrent.ArrayBlockingQueue
-import java.util.concurrent.BlockingQueue
-import java.util.concurrent.Callable
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
-import java.util.concurrent.Future
-import java.util.concurrent.FutureTask
+import java.util.concurrent.*
 
 /**
  * Сервисный уровень главной таблицы
@@ -24,11 +18,22 @@ class ProductService {
 
     private static final Logger logger = LoggerFactory.getLogger(ProductService.class);
 
-    private static final ExecutorService consumers = Executors.newFixedThreadPool(2);
+    //кол-во потоков
+    private static final byte COUNT_THREAD = 10
+
+    //длина очереди
+    private static final byte QUEUE_LENGTH = 50
+
+    //пул для многопоточной обработки xml файлов
+    private static final ExecutorService consumers = Executors.newFixedThreadPool(COUNT_THREAD);
+
+    //Ссылка на результат выполнения потока, читающего xml файл и заполняющего очередь queue
+    private static FutureTask<String> futureProducer
 
     /**
-     * Парсинг xml файла
-     * @param file Переданный файл из запроса
+     * Парсинг xml файла. Используется XmlSlurper
+     *
+     * @param InputStream Поток для чтения
      * @return отформатированный результат
      */
     private def getXmlContent(InputStream inputStreamXML) {
@@ -45,34 +50,53 @@ class ProductService {
 
     /**
      * Функция парсинга xml данных и импорта в БД сущностей product
-     * @param xmlContent
-     * @return
+     * с реализацией многопоточности по алгоритму: читает файл и создает объекты 1 поток, сохраняют - COUNT_THREAD потоков
+     * (операция сохранения самая долгая, время парсинга и преобразования считанных данных - несоизмеримо меньше)
+     *
+     * @param xmlContent Объект, распарсенный XmlSlurper
+     * @return String
      */
     @Transactional
     private def importXmlToDB(def xmlContent) {
         logger.debug("importXmlToDB()")
 
-        BlockingQueue<Product> queue = new ArrayBlockingQueue<Product>(50)
+        //очередь со считанными записями Product из файла, которые подлежат сохранению
+        BlockingQueue<Product> queue = new ArrayBlockingQueue<Product>(QUEUE_LENGTH)
 
-        FutureTask<String> futureProducer = new FutureTask<>(new Producer(queue, xmlContent))
+        //запускаем поток на парсинг файла
+        futureProducer = new FutureTask<>(new Producer(queue, xmlContent))
         Thread producer = new Thread(futureProducer)
-        //Future consumer = consumers.submit(new Consumer(queue))
-        //Thread consumer = new Thread(new Consumer(queue))!!!! TODO: static
 
         producer.start()
-        //consumer.start()
 
-        String message
-        try {
-            message = futureProducer.get()
-        } catch (InterruptedException e) {
-            message = "Ошибка получения результата парсинга"
+        //создаем потоки на сохранение объектов из очереди queue в БД
+        List futureListConsumers = new ArrayList();
+        for (i in 1..COUNT_THREAD) {
+            FutureTask futureTask = consumers.submit(new Consumer(queue))
+            futureListConsumers.add(futureTask)
         }
-        logger.debug(message)
 
-        return message
+        String result
+        try {
+            //не выходим из метода до полного завершения обработки для корректного замера длительности всего парсинга
+            //TODO: Результат работы потока должен подтверждать успешность сохранения объекта в БД (для статистики)
+            for (FutureTask consumerTask : futureListConsumers) {
+                if (!consumerTask.isDone())
+                    Thread.sleep(1)
+            }
+
+            result = futureProducer.get()
+        } catch (InterruptedException e) {
+            result = "Ошибка получения результата парсинга"
+        }
+        logger.debug(result)
+
+        return result
     }
 
+    /**
+     * класс, реализующий логику потока парсера и заполняющего очередь
+     */
     class Producer implements Callable<String> {
         BlockingQueue<Product> queue
         def xmlContent
@@ -85,11 +109,11 @@ class ProductService {
         @Override
         String call() {
             String threadName = "${Thread.currentThread().getName()}"
-            logger.debug("${threadName}: запущен поток для пасинга файла и генерации объектов Product")
+            logger.debug("${threadName}: запущен поток для парсинга файла и генерации объектов Product")
 
-            def productId
+            def productId = 0
             def countSuccessful = 0, countError = 0
-            logger.debug("${threadName}: Запуск парсинга XML")
+
             xmlContent.products.product.each { product ->
                 try {
                     logger.debug("${threadName}: Импортируется сущность с наименованием: ${product.title[0].text()}")
@@ -134,6 +158,9 @@ class ProductService {
         }
     }
 
+    /**
+     * Класс, реализующий логику потока для сохранения записей из очереди в БД
+     */
     class Consumer implements Runnable {
         BlockingQueue<Product> queue
 
@@ -146,16 +173,22 @@ class ProductService {
             String threadName = "${Thread.currentThread().getName()}"
 
             logger.debug("${threadName}: запущен поток для сохранения данных в БД.")
-            while (true) {
-                try {
-                    Thread.sleep(1)
+            Product product
 
-                    Product product = queue.poll()
+            //Работаем до тех пор, пока работает поток парсинга или в очереди что-то есть
+            while (!futureProducer.isDone() || queue.size() > 0) {
+                try {
+                    product = queue.poll()
 
                     if (product != null) {
+
+                        //product.save(flush: true, failOnError: true);
                         saveEntity(product)
 
                         logger.debug("${threadName}: Объект сохранен в БД")
+
+                    } else {
+                        Thread.sleep(1)
                     }
 
                 } catch (InterruptedException e) {
@@ -163,6 +196,8 @@ class ProductService {
                     break
                 }
             }
+
+            logger.debug("${threadName}: остановлен поток для сохранения данных в БД.")
         }
     }
 
@@ -196,6 +231,7 @@ class ProductService {
 
     /**
      * Пересчет калегории продукта по его текущему рейтингу
+     *
      * @param product текущая сущность
      */
     void recheckCategory(Product product) {
@@ -204,8 +240,16 @@ class ProductService {
         product.category = categoryService.getByRating(product.rating)
     }
 
+    /**
+     * Основная функция парсинга xml файла
+     *
+     * @param inputStream поток, из которого читаем xml файл
+     * @param logWriter выходной поток для записи логов в файл (используется при фоновом парсинге для последующего
+     * отображения на сайте)
+     * @return String
+     */
     def parsingInputStream(InputStream inputStream, BufferedWriter logWriter) {
-        String message
+        String result
 
         try {
             def startTime = System.currentTimeMillis()
@@ -214,12 +258,12 @@ class ProductService {
             manualLogging(logWriter, "${new Date(startTime)}: Запуск автоматической процедуры импорта данных.")
 
             def xmlContent = getXmlContent(inputStream)
-            message = importXmlToDB(xmlContent)
+            result = importXmlToDB(xmlContent)
 
             def time = System.currentTimeMillis() - startTime
 
             logger.info("Время обработки файла: ${time} ms")
-            message = "${message}. Время обработки файла: ${time} ms."
+            result = "${result}. Время обработки файла: ${time} ms."
 
             manualLogging(logWriter, "${new Date(System.currentTimeMillis())}: Завершение автоматической процедуры импорта данных.")
 
@@ -229,32 +273,39 @@ class ProductService {
             logger.error(text)
             manualLogging(logWriter, text)
 
-            message = message(code: 'data.import.exceptionparsing')
+            result = text
         } catch (IOException e) {
             String text = "Ошибка открытия импортируемого файла. ${e.getMessage()}."
 
             logger.error(text)
             manualLogging(logWriter, text)
 
-            message = message(code: 'data.import.ioexception')
+            result = text
         } finally {
             inputStream?.close();
         }
 
-        return message
+        return result ?: ""
     }
 
-    private void manualLogging(BufferedWriter logWriter, String message) {
-        if (logWriter != null) logWriter.writeLine(message)
+    /**
+     * Служебная функция записи строки в выходной поток
+     *
+     * @param logWriter поток для записи
+     * @param text записываемый текст
+     */
+    private void manualLogging(BufferedWriter logWriter, String text) {
+        if (logWriter != null) logWriter.writeLine(text)
     }
 
     /**
      * Сохранение записи вынесено в отдельную функцию, т.к. автомаппинг спринга ломает сигнатуры наследуемых методов потоков...
+     *
      * @param product Сохраняемая сущность
      * @return void
      */
     @Transactional
-    def saveEntity(Product product) {
+    private void saveEntity(Product product) {
         product.save(flush: true, failOnError: true);
     }
 }

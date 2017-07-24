@@ -18,7 +18,8 @@ class DataController {
     }
 
     /**
-     * Функция импорта xml-файла
+     * Функция ручного импорта xml-файла через gsp
+     *
      * @return view
      */
     def importXml() {

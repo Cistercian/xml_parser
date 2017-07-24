@@ -67,6 +67,9 @@ class ProductController {
             return
         }
 
+        /**
+         * Проверяем валидацию поля title и на стороне клиента, и на стороне сервера
+         */
         if (!(product.title ==~ '^[а-яА-Я0-9 ]+$')) {
             logger.info("не пройдена валидация! title:${product.title}")
 
@@ -110,6 +113,9 @@ class ProductController {
             return
         }
 
+        /**
+         * Проверяем валидацию поля title и на стороне клиента, и на стороне сервера
+         */
         if (!(product.title ==~ '^[а-яА-Я0-9 ]+$')) {
             logger.info("не пройдена валидация! title:${product.title}")
 
@@ -119,7 +125,7 @@ class ProductController {
             return
         }
 
-        //TODO: не работает автоматическая валидация по полю productId (просто молчаливо игнорируется params.productId > Integer.MAX_VALUE). Почему?
+        //не работает автоматическая валидация по полю productId (просто молчаливо игнорируется params.productId > Integer.MAX_VALUE). Почему?
         try{
             product.productId = Integer.valueOf(params.productId)
         } catch (NumberFormatException e) {
@@ -177,6 +183,7 @@ class ProductController {
     /**
      * Функция отображение image из БД
      * функционал убран - зачем качать картинки в БД?
+     *
      * @param product
      */
     @Deprecated
@@ -189,7 +196,8 @@ class ProductController {
 
     /**
      * Функция передает данные таблицы Product (Для datatables.js)
-     * функционал убран - datatables - так себе решение при большом количестве записей в БД
+     * Функционал убран. datatables - так себе решение при большом количестве записей в БД
+     *
      * @return JSON
      */
     @Deprecated

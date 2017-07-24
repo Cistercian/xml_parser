@@ -12,6 +12,7 @@ class ViewCounterService {
     /**
      * Функция увеличения счетчика просмотренных товаров.
      * На всякий случай синхронизируем для работы нескольких клиентов
+     *
      * @param product текущая сущность Product ()
      * @return void
      */
@@ -22,7 +23,7 @@ class ViewCounterService {
         Date currentTime = new Date();
         Long currentMinute = Math.floor(currentTime.getTime() / 60_000)
 
-        logger.debug("Текущая минута: ${currentTime.getDateString()}: ${currentMinute}")
+        logger.debug("Текущая минута: ${currentMinute}")
 
         //ищем в базе запись для данного Product и данной минуты, если ее нет - создаем.
         ViewCounter counter = ViewCounter.findByTimestampAndProduct(currentMinute, product) ?:
