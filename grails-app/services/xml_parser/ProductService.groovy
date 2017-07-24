@@ -6,6 +6,9 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest
 
+/**
+ * Сервисный уровень главной таблицы
+ */
 @Transactional
 class ProductService {
 
