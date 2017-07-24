@@ -21,10 +21,10 @@ class ProductService {
      * @param file Переданный файл из запроса
      * @return отформатированный результат
      */
-    def getXmlContent(StandardMultipartHttpServletRequest.StandardMultipartFile sourceXmlFile) {
+    def getXmlContent(InputStream inputStreamXML) {
         logger.debug("getXmlContent()")
 
-        def xmlContent = sourceXmlFile.getInputStream()?.getText()
+        def xmlContent = inputStreamXML?.getText()
         def parser = new XmlSlurper();
 
         parser.setFeature("http://apache.org/xml/features/disallow-doctype-decl", false)

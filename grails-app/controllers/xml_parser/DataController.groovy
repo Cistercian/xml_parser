@@ -22,12 +22,12 @@ class DataController {
      * @return view
      */
     def importXml() {
-        log.debug("importXML()")
+        logger.debug("importXML()")
 
         def sourceXml = request.getFile('sourceXml')
 
         if (sourceXml.empty) {
-            log.info("Импортируемый файл не найден")
+            logger.info("Импортируемый файл не найден")
 
             flash.message = message(code: 'data.import.filenotfound')
             render(view: 'data')
@@ -37,7 +37,7 @@ class DataController {
         try {
             def startTime = System.currentTimeMillis()
 
-            def xmlContent = productService.getXmlContent(sourceXml)
+            def xmlContent = productService.getXmlContent(sourceXml.getInputStream())
             flash.message = productService.importProductsXml(xmlContent)
 
             def time = System.currentTimeMillis() - startTime
@@ -46,7 +46,7 @@ class DataController {
             flash.message = "${flash.message}. Время обработки файла: ${time} ms."
 
         } catch (SAXParseException e) {
-            log.error("Ошибка парсинга файла: нарушена структура xml-файла. ${e.getMessage()}")
+            logger.error("Ошибка парсинга файла: нарушена структура xml-файла. ${e.getMessage()}")
             flash.message = message(code: 'data.import.exceptionparsing')
         } finally {
             if (flash.message != null) {
