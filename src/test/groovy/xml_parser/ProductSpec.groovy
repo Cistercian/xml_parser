@@ -1,12 +1,14 @@
 package xml_parser
 
-import org.grails.testing.GrailsUnitTest
+import grails.testing.gorm.DomainUnitTest
+import spock.lang.Shared
 import spock.lang.Specification
+import spock.lang.Stepwise
 
-@TestFor
-class ProductSpec extends Specification  implements GrailsUnitTest {
+@Stepwise
+class ProductSpec extends Specification  implements DomainUnitTest<Product> {
 
-    def product
+    @Shared int id
 
     def setup() {
         //product = new Product()
@@ -15,20 +17,23 @@ class ProductSpec extends Specification  implements GrailsUnitTest {
     def cleanup() {
     }
 
+    void "test simple saving"(){
+        setup:
+            new Product(
+                    productId: 0,
+                    title: "title",
+                    description: "description",
+                    rating: 1f,
+                    price: new BigDecimal("100"),
+                    image: "image",
+                    category: null
+            ).save
+
+        expect:
+            Product.count() == 1
+    }
+
     void validateProductId1() {
-        given:
-        def product2 = new Product(
-                productId: 0,
-                title: "1",
-                description: "1",
-                rating: 1f,
-                price: new BigDecimal("100"),
-                image: "1",
-                category: null
-        )
-        when:
-            product2.productId  = -1
-        then:
-            !product2.validate()
+
     }
 }
