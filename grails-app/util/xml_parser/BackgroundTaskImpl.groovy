@@ -22,14 +22,18 @@ class BackgroundTaskImpl implements BackgroundTask {
     public static final String LOG_PATH = "C:/JAVA/LOG"                         //папка с логами
     public static final String LOG_FILENAME = "log.txt"                         //имя лог файла
 
+    private static final BufferedWriter logWriter
+
     static {
         //TODO: почему игнорируется?
         checkDir(Paths.get(ARC_PATH))
         checkDir(Paths.get(LOG_PATH))
+
+        logWriter = Files.newBufferedWriter(Paths.get("${LOG_PATH}/${LOG_FILENAME}"),
+                StandardCharsets.UTF_8, StandardOpenOption.CREATE, StandardOpenOption.APPEND);
     }
 
-    private static BufferedWriter logWriter = Files.newBufferedWriter(Paths.get("${LOG_PATH}/${LOG_FILENAME}"),
-            StandardCharsets.UTF_8, StandardOpenOption.APPEND);
+
 
     /**
      * Функция запуска импорта xml файла в фоновом режиме. Вызывается через спринг (/conf/spring/resources.groovy)

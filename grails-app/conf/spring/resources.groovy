@@ -9,6 +9,6 @@ beans = {
     xmlns backgroundTask: "http://www.springframework.org/schema/task"
 
     backgroundTask.'scheduled-tasks'{
-        backgroundTask.scheduled(ref:'backgroundTaskImpl', method: 'importXML', cron: '* * 5 * * *')
+        backgroundTask.scheduled(ref:'backgroundTaskImpl', method: 'importXML', cron: '*/30 * * * * *')
     }
 }
