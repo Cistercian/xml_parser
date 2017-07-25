@@ -46,7 +46,7 @@
                                 <tr>
                                     <g:sortableColumn property="productId"
                                                       title="${message(code: "product.productId")}"/>
-                                    <g:sortableColumn property="title" title="${message(code: "product.title")}"/>
+                                    <g:sortableColumn property="title" title="${message(code: "product.label.title")}"/>
                                     <g:sortableColumn property="price" title="${message(code: "product.price")}"/>
                                     <g:sortableColumn property="rating"
                                                       title="${message(code: "product.rating")}"/>
