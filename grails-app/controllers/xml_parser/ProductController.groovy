@@ -16,7 +16,6 @@ import static org.springframework.http.HttpStatus.*
 class ProductController {
 
     def viewCounterService
-
     def productService
 
     private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
@@ -33,7 +32,6 @@ class ProductController {
         logger.debug("show() ${product.id}")
 
         //игнорируем попытки просмотреть несуществуюущю запись
-
         if (product != null) {
             //исключаем ожидание клиента из-за возможной очереди на запись счетчика
             new Thread(new Runnable() {

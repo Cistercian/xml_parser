@@ -119,7 +119,7 @@
 	}
 	.modal-header {
 		padding: 7px;
-	}
+	}/*
 	.wam-font-size {
 		font-size: 14px;
 	}
@@ -129,6 +129,7 @@
 	.wam-font-size-2 {
 		font-size: 16px;
 	}
+	*/
 	.wam-not-padding-xs {
 		padding: 0px;
 		margin-bottom: 0px;
@@ -143,13 +144,14 @@
 		margin-right: 0px;
 		margin-left: 0px;
 	}
-
+/*
 	h3, .h3 {
 		font-size: 20px;
 	}
 	h4, .h4 {
 		font-size: 18px;
 	}
+	*/
 	.wam-margin-bottom-1 {
 		margin-bottom: 5px;
 	}

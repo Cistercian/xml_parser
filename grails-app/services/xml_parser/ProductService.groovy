@@ -20,13 +20,10 @@ class ProductService {
 
     //кол-во потоков
     private static final byte COUNT_THREAD = 10
-
     //длина очереди
     private static final byte QUEUE_LENGTH = 50
-
     //пул для многопоточной обработки xml файлов
     private static final ExecutorService consumers = Executors.newFixedThreadPool(COUNT_THREAD);
-
     //Ссылка на результат выполнения потока, читающего xml файл и заполняющего очередь queue
     private static FutureTask<String> futureProducer
 
@@ -169,12 +166,9 @@ class ProductService {
 
                     //Если текущее поле product_id пустое или не существует - берем предыдущее известное значение
                     productId = product.product_id[0].text() ?: productId
-
                     //Если поле inet_price отсутствует или пустое - обнуляем поле price сущности, иначе - берем значение поля price
                     def price = product.inet_price[0]?.text()?.length() > 0 ? product.price[0]?.text() ?: 0 : 0
-
                     def rating = Float.valueOf(product.rating[0]?.text()) ?: Float.valueOf("0")
-
                     //расчитываем категорию товара
                     def category = categoryService.getByRating(rating);
 
@@ -230,11 +224,8 @@ class ProductService {
                     product = queue.poll()
 
                     if (product != null) {
-
                         saveEntity(product)
-
                         logger.debug("${threadName}: Объект сохранен в БД")
-
                     } else {
                         Thread.sleep(1)
                     }
@@ -279,13 +270,12 @@ class ProductService {
     }
 
     /**
-     * Пересчет калегории продукта по его текущему рейтингу
+     * Пересчет категории продукта по его текущему рейтингу
      *
      * @param product текущая сущность
      */
     void recheckCategory(Product product) {
         logger.debug("recheckCategory()")
-
         product.category = categoryService.getByRating(product.rating)
     }
 
