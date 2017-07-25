@@ -17,6 +17,7 @@
     <asset:javascript src="jquery.js"/>
     <asset:javascript src="bootstrap.min.js"/>
     <asset:javascript src="functions.js"/>
+
 </head>
 
 <body>

@@ -14,6 +14,7 @@
     <asset:stylesheet src="style.css?compile=true"/>
 
     <asset:javascript src="jquery.js"/>
+    <asset:javascript src="bootstrap.min.js"/>
 
 </head>
 

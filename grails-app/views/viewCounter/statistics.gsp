@@ -17,6 +17,7 @@
     <asset:javascript src="jquery.flot.js"/>
     <asset:javascript src="jquery.flot.time.js"/>
     <asset:javascript src="jquery.flot.selection.js"/>
+    <asset:javascript src="bootstrap.min.js"/>
 
 </head>
 
