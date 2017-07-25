@@ -1,31 +1,26 @@
 package xml_parser
 
+import grails.testing.gorm.DomainUnitTest
 import org.grails.testing.GrailsUnitTest
+import spock.lang.Shared
 import spock.lang.Specification
+import spock.lang.Stepwise
 
-class CategorySpec extends Specification implements GrailsUnitTest {
-
-    Category category
+class CategorySpec extends Specification  implements DomainUnitTest<Product> {
 
     def setup() {
-        category = new Category(grade: (byte) 0, name: "Плохой")
+
     }
 
     def cleanup() {
     }
 
-    void creatingValue() {
-        expect:"fix me"
-        category != null
-    }
+    void "simple creating entity"() {
+        setup:
+        new Category(grade: (byte) 0 , name: "name").save()
+        new Category(grade: (byte) 1 , name: "another").save()
 
-    void getGrade(){
         expect:
-        category.grade == (byte) 0
-    }
-
-    void getName(){
-        expect:
-        "Плохой".equals(category.name)
+        Category.count() == 2
     }
 }

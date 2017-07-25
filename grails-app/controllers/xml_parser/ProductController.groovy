@@ -21,7 +21,7 @@ class ProductController {
 
     private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
 
-    static allowedMethods = [save: "POST", update: "POST"]
+    static allowedMethods = [save: "POST", update: "POST", show: "GET"]
 
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
@@ -29,9 +29,11 @@ class ProductController {
     }
 
     def show(Product product) {
-        logger.debug("show()")
+
+        logger.debug("show() ${product.id}")
 
         //игнорируем попытки просмотреть несуществуюущю запись
+
         if (product != null) {
             //исключаем ожидание клиента из-за возможной очереди на запись счетчика
             new Thread(new Runnable() {

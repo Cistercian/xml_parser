@@ -17,6 +17,7 @@ class ViewCounterService {
      * @return void
      */
     def synchronized incrementCounter(Product product) {
+
         logger.debug("incrementCounter()")
 
         //рассчитываем номер текущей минуты
@@ -32,5 +33,6 @@ class ViewCounterService {
         counter.count++
 
         counter.save(flush: true, failOnError: true)
+
     }
 }

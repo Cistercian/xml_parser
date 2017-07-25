@@ -261,14 +261,15 @@ class ProductService {
     def fixNumberParsing(Product product, def params) {
         logger.debug("fixNumberParsing()")
         try {
-            product.rating = Float.valueOf(params.rating.replace(',', '.'))
+            product.rating = Float.valueOf(params.rating?.replace(',', '.'))
             //переопределяем категорию на основании текущего рейтинга
             recheckCategory(product)
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException | NullPointerException e) {
             logger.info("Ошибка преобразования рейтинга: ${e.getMessage()}")
         }
         try {
-            product.price = new BigDecimal(params.price.replace(',', '.'))
+            String price = params.price?.replace(',', '.') ?: 'null'
+            product.price = new BigDecimal(price)
         } catch (NumberFormatException e) {
             logger.info("Ошибка преобразования цены: ${e.getMessage()}")
         }
