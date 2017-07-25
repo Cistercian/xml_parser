@@ -30,6 +30,55 @@ class ProductService {
     //Ссылка на результат выполнения потока, читающего xml файл и заполняющего очередь queue
     private static FutureTask<String> futureProducer
 
+
+    /**
+     * Основная функция парсинга xml файла
+     *
+     * @param inputStream поток, из которого читаем xml контент
+     * @param logWriter выходной поток для записи логов в файл (используется при фоновом парсинге для последующего
+     * отображения на сайте)
+     * @return String
+     */
+    def parsingInputStream(InputStream inputStream, BufferedWriter logWriter) {
+        String result
+
+        try {
+            def startTime = System.currentTimeMillis()
+
+            manualLogging(logWriter, "==============");
+            manualLogging(logWriter, "${new Date(startTime)}: Запуск автоматической процедуры импорта данных.")
+
+            def xmlContent = getXmlContent(inputStream)
+            result = importXmlToDB(xmlContent)
+
+            def time = System.currentTimeMillis() - startTime
+
+            logger.info("Время обработки файла: ${time} ms")
+            result = "${result}. Время обработки файла: ${time} ms."
+
+            manualLogging(logWriter, "${new Date(System.currentTimeMillis())}: Завершение автоматической процедуры импорта данных.")
+
+        } catch (SAXParseException e) {
+            String text = "Ошибка парсинга файла: нарушена структура xml-файла. ${e.getMessage()}"
+
+            logger.error(text)
+            manualLogging(logWriter, text)
+
+            result = text
+        } catch (IOException e) {
+            String text = "Ошибка открытия импортируемого файла. ${e.getMessage()}."
+
+            logger.error(text)
+            manualLogging(logWriter, text)
+
+            result = text
+        } finally {
+            inputStream?.close();
+        }
+
+        return result ?: ""
+    }
+
     /**
      * Парсинг xml файла. Используется XmlSlurper
      *
@@ -80,7 +129,7 @@ class ProductService {
         try {
             //не выходим из метода до полного завершения обработки для корректного замера длительности всего парсинга
             //TODO: Результат работы потока должен подтверждать успешность сохранения объекта в БД (для статистики)
-            for (FutureTask consumerTask : futureListConsumers) {
+            for (consumerTask in futureListConsumers) {
                 if (!consumerTask.isDone())
                     Thread.sleep(1)
             }
@@ -182,7 +231,6 @@ class ProductService {
 
                     if (product != null) {
 
-                        //product.save(flush: true, failOnError: true);
                         saveEntity(product)
 
                         logger.debug("${threadName}: Объект сохранен в БД")
@@ -238,54 +286,6 @@ class ProductService {
         logger.debug("recheckCategory()")
 
         product.category = categoryService.getByRating(product.rating)
-    }
-
-    /**
-     * Основная функция парсинга xml файла
-     *
-     * @param inputStream поток, из которого читаем xml файл
-     * @param logWriter выходной поток для записи логов в файл (используется при фоновом парсинге для последующего
-     * отображения на сайте)
-     * @return String
-     */
-    def parsingInputStream(InputStream inputStream, BufferedWriter logWriter) {
-        String result
-
-        try {
-            def startTime = System.currentTimeMillis()
-
-            manualLogging(logWriter, "==============");
-            manualLogging(logWriter, "${new Date(startTime)}: Запуск автоматической процедуры импорта данных.")
-
-            def xmlContent = getXmlContent(inputStream)
-            result = importXmlToDB(xmlContent)
-
-            def time = System.currentTimeMillis() - startTime
-
-            logger.info("Время обработки файла: ${time} ms")
-            result = "${result}. Время обработки файла: ${time} ms."
-
-            manualLogging(logWriter, "${new Date(System.currentTimeMillis())}: Завершение автоматической процедуры импорта данных.")
-
-        } catch (SAXParseException e) {
-            String text = "Ошибка парсинга файла: нарушена структура xml-файла. ${e.getMessage()}"
-
-            logger.error(text)
-            manualLogging(logWriter, text)
-
-            result = text
-        } catch (IOException e) {
-            String text = "Ошибка открытия импортируемого файла. ${e.getMessage()}."
-
-            logger.error(text)
-            manualLogging(logWriter, text)
-
-            result = text
-        } finally {
-            inputStream?.close();
-        }
-
-        return result ?: ""
     }
 
     /**
