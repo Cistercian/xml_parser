@@ -28,8 +28,7 @@ class ProductController {
     }
 
     def show(Product product) {
-
-        logger.debug("show() ${product.id}")
+        logger.debug("show()")
 
         //игнорируем попытки просмотреть несуществуюущю запись
         if (product != null) {
