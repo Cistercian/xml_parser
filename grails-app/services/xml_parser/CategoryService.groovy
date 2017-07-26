@@ -48,10 +48,7 @@ class CategoryService {
     Category getByRating(Float rating) {
         logger.debug("getByRating()")
 
-        if (Float.compare(rating, 3f) <= 0) {
-            log.debug("${rating} - относим к категории Плохая")
-            return categories.get(0)
-        } else if (Float.compare(rating, 3f) > 0 && Float.compare(rating, 4f) <= 0) {
+        if (Float.compare(rating, 3f) > 0 && Float.compare(rating, 4f) <= 0) {
             log.debug("${rating} - относим к категории Хорошая")
             return categories.get(1)
         } else if (Float.compare(rating, 4f) > 0 && Float.compare(rating, 5f) <= 0) {
