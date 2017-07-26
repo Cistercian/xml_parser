@@ -56,7 +56,7 @@ class CategoryService {
             return categories.get(2)
         }
 
-        log.debug("${rating} - относим к категории по-умолчанию")
+        log.debug("${rating} - относим к категории Плохая")
         return categories.get(0)
     }
 }
