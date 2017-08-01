@@ -127,7 +127,7 @@ class ProductService {
             //не выходим из метода до полного завершения обработки для корректного замера длительности всего парсинга
             //TODO: Результат работы потока должен подтверждать успешность сохранения объекта в БД (для статистики)
             for (consumerTask in futureListConsumers) {
-                if (!consumerTask.isDone())
+                while (!consumerTask.isDone())
                     Thread.sleep(1)
             }
 
