@@ -58,5 +58,6 @@ class CategoryService {
 
         log.debug("${rating} - относим к категории Плохая")
         return categories.get(0)
+        
     }
 }

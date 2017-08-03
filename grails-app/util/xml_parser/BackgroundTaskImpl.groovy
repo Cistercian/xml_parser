@@ -33,8 +33,6 @@ class BackgroundTaskImpl implements BackgroundTask {
                 StandardCharsets.UTF_8, StandardOpenOption.CREATE, StandardOpenOption.APPEND);
     }
 
-
-
     /**
      * Функция запуска импорта xml файла в фоновом режиме. Вызывается через спринг (/conf/spring/resources.groovy)
      * по заданному в указанном файле шедулеру
